@@ -6,8 +6,8 @@ description             "Manages doozer and its installed libraries."
 long_description        IO.read('README.md')
 version                 "0.0.1"
 
-requires 'build-essential'
-requires 'golang'
+depends 'build-essential'
+depends 'golang'
 
 %w(ubuntu debian redhat centos).each do |os|
   supports os
