@@ -20,8 +20,19 @@
 # limitations under the License.
 #
 
-bash "install_doozer" do
-  code "go get #{node['doozer']['git_url']}"
-  environment 'GOPATH' => node['doozer']['install_prefix']
-  not_if {::File.exists?(File.join(node['doozer']['install_prefix'], 'doozer'))}
+install_prefix = node['doozer']['install_prefix']
+go = File.join(node['go']['install_dir'], 'go/bin/go')
+go_url = node['doozer']['go_url']
+
+bash "install-doozer" do
+  code "#{go} get #{go_url}"
+  environment 'GOPATH' => install_prefix
+  only_if {::File.directory?(install_prefix)}
+end
+
+bash "install-doozer-cli" do
+  code "#{go} get #{go_url}/cmd/doozer"
+  environment 'GOPATH' => install_prefix
+  creates File.join(install_prefix, 'bin/doozer')
+  only_if {::File.directory?(install_prefix)}
 end

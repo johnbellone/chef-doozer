@@ -20,11 +20,9 @@
 # limitations under the License.
 #
 
-default['doozerd']['git_url'] = 'git://github.com/ha/doozerd.git'
-default['doozerd']['git_tag'] = 'v0.8'
+default['doozerd']['go_url'] = 'github.com/ha/doozerd'
 
-default['doozer']['git_url'] = 'git://github.com/ha/doozer.git'
-default['doozer']['git_tag'] = 'v0.8'
+default['doozer']['go_url'] = 'github.com/ha/doozer'
 
-default['doozerd']['install_suffix'] = '/usr/local'
-default['doozer']['install_suffix'] = '/usr/local'
+default['doozerd']['install_prefix'] = '/usr/local'
+default['doozer']['install_prefix'] = '/usr/local'

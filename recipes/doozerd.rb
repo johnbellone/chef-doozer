@@ -20,8 +20,13 @@
 # limitations under the License.
 #
 
+install_prefix = node['doozerd']['install_prefix']
+go = File.join(node['go']['install_dir'], 'go/bin/go')
+go_url = node['doozerd']['go_url']
+
 bash "install-doozerd" do
-  code "go get #{node['doozerd']['git_url']}"
-  environment 'GOPATH' => node['doozerd']['install_prefix']
-  not_if {::File.exists?(File.join(node['doozerd']['install_prefix'], 'doozerd'))}
+  code "#{go} get #{go_url}"
+  environment 'GOPATH' => install_prefix
+  creates File.join(install_prefix, 'bin/doozerd')
+  not_if {::File.exists?(File.join(install_prefix, 'doozerd'))}
 end
