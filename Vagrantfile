@@ -45,7 +45,8 @@ Vagrant.configure("2") do |config|
     chef.add_recipe "golang"
     chef.add_recipe "mercurial"
     chef.add_recipe "git"
-    chef.add_recipe "doozer::default"
+    chef.add_recipe "doozer"
+    chef.add_recipe "doozer::doozerd"
 
     chef.json = {
       'go' => {
