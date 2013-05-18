@@ -2,8 +2,11 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  # Instruct to install Chef Client.
+  config.omnibus.chef_version = :latest
+
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu-12.04"
+  config.vm.box = "ubuntu-12.04-i386"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
@@ -38,10 +41,17 @@ Vagrant.configure("2") do |config|
   #
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = "cookbooks"
-    chef.roles_path = "roles"
-    chef.data_bags_path = "data_bags"
     chef.add_recipe "build-essential"
     chef.add_recipe "golang"
-    chef.add_recipe "doozer"
+    chef.add_recipe "mercurial"
+    chef.add_recipe "git"
+    chef.add_recipe "doozer::default"
+
+    chef.json = {
+      'go' => {
+        'platform' => '386',
+        'version' => '1.1'
+      }
+    }
   end
 end

@@ -1,8 +1,8 @@
 Gemfile.lock
 Cheffile.lock
-bin/
-tmp/
-log/
-cookbooks/
+/bin
+/tmp
+/log
+/cookbooks
 .bundle
 .vagrant
