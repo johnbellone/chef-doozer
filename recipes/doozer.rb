@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 #
 # Cookbook Name:: doozer
-# Attributes:: default
+# Recipe:: doozer
 #
 # Author:: John Bellone <john.bellone.jr@gmail.com>
 #
@@ -20,11 +20,8 @@
 # limitations under the License.
 #
 
-default['doozerd']['git_url'] = 'git://github.com/ha/doozerd.git'
-default['doozerd']['git_tag'] = 'v0.8'
-
-default['doozer']['git_url'] = 'git://github.com/ha/doozer.git'
-default['doozer']['git_tag'] = 'v0.8'
-
-default['doozerd']['install_suffix'] = '/usr/local'
-default['doozer']['install_suffix'] = '/usr/local'
+bash "install_doozer" do
+  code "go get #{node['doozer']['git_url']}"
+  environment 'GOPATH' => node['doozer']['install_prefix']
+  not_if {::File.exists?(File.join(node['doozer']['install_prefix'], 'doozer'))}
+end

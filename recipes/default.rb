@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 #
 # Cookbook Name:: doozer
-# Attributes:: default
+# Recipe:: default
 #
 # Author:: John Bellone <john.bellone.jr@gmail.com>
 #
@@ -20,11 +20,4 @@
 # limitations under the License.
 #
 
-default['doozerd']['git_url'] = 'git://github.com/ha/doozerd.git'
-default['doozerd']['git_tag'] = 'v0.8'
-
-default['doozer']['git_url'] = 'git://github.com/ha/doozer.git'
-default['doozer']['git_tag'] = 'v0.8'
-
-default['doozerd']['install_suffix'] = '/usr/local'
-default['doozer']['install_suffix'] = '/usr/local'
+include_recipe "doozer::doozer"
