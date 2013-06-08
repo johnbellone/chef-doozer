@@ -6,11 +6,11 @@ Vagrant.configure("2") do |config|
   config.omnibus.chef_version = :latest
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu-12.04-i386"
+  config.vm.box = "ubuntu-12.04"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
+  config.vm.box_url = "https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
   # Example for VirtualBox:
   config.vm.provider :virtualbox do |vb|
      # Use VBoxManage to customize the VM. For example to change memory:
-     vb.customize ["modifyvm", :id, "--memory", "1024"]
+     vb.customize ["modifyvm", :id, "--memory", "512"]
    end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
 
     chef.json = {
       'go' => {
-        'platform' => '386',
+        'platform' => 'amd64',
         'version' => '1.1'
       }
     }
