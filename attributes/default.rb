@@ -21,8 +21,13 @@
 #
 
 default['doozerd']['go_url'] = 'github.com/ha/doozerd'
+default['doozerd']['install_prefix'] = '/usr/local'
+default['doozerd']['root_group'] = "root"
+
+case platform
+  when "ubuntu", "debian"
+  default['doozerd']['pid_file'] = "/var/run/doozerd.pid"
+end
 
 default['doozer']['go_url'] = 'github.com/ha/doozer'
-
-default['doozerd']['install_prefix'] = '/usr/local'
 default['doozer']['install_prefix'] = '/usr/local'

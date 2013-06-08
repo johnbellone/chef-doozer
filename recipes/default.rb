@@ -20,4 +20,34 @@
 # limitations under the License.
 #
 
-include_recipe "doozer::doozer"
+include_recipe "doozer::doozerd"
+
+service "doozerd" do
+  case platform
+    when "ubuntu"
+    start_command "/usr/sbin/invoke-rc.d doozerd start"
+    stop_command "/usr/sbin/invoke-rc.d doozerd stop"
+    restart_command "/usr/sbin/invoke-rc.d doozerd restart"
+    status_command "/usr/sbin/invoke-rc.d doozerd status"
+  end
+
+  supports [:restart]
+  action :enable
+end
+
+template "/etc/init.d/doozerd" do
+  source "init.erb"
+  owner "root"
+  group node['doozerd']['root_group']
+  mode 00644
+  notifies :restart, "service[doozerd]"
+  variables({
+    :doozerd_path => node['doozerd']['install_prefix'],
+    :doozerd_pidfile => node['doozerd']['pid_file']
+  })
+  only_if { platform_family?("debian") }
+end
+
+service "doozerd" do
+  action :start
+end
