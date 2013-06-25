@@ -1,4 +1,8 @@
 # -*- mode: ruby -*-
 # Gemfile
 source "https://rubygems.org"
-gem "librarian-chef"
+
+group :development do
+  gem "librarian-chef"
+  gem "foodcritic"
+end
