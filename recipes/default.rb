@@ -1,4 +1,3 @@
-# -*- mode: ruby -*-
 #
 # Cookbook Name:: doozer
 # Recipe:: default
@@ -24,9 +23,31 @@ include_recipe "doozer::doozerd"
 
 options = {
   :doozerd_user => node['doozerd']['user'],
-  :doozerd_path => node['doozerd']['install_prefix'],
-  :doozerd_options => node['doozerd']['run_options']
+  :doozerd_path => node['doozerd']['install_prefix']
 }
+
+options['doozerd_options'] = node['doozerd']['run_options'].map do |k,v|
+  case k.to_sym
+    when :listen_address
+    "-l '#{v}'"
+    when :web_address
+    "-w '#{v}'"
+    when :boot_address
+    "-b '#{v}'"
+    when :name
+    "-c '#{v}'"
+    when :history
+    "-hist #{v}"
+    when :timeout
+    "-timeout #{v}"
+    when :pulse
+    "-pulse #{v}"
+    when :fill
+    "-fill #{v}"
+    when :attach_addresses
+    k.to_enum(:to_s).flat_map(&:prepend, "-a '").join('" ')
+  end
+end.join(' ')
 
 template "doozerd" do
   case node[:platform]
@@ -41,7 +62,7 @@ template "doozerd" do
   end
 
   owner 'root'
-  group node['doozerd']['root_group']
+  group node['doozerd']['user_group']
   notifies :restart, 'service[doozerd]'
   variables options
 end

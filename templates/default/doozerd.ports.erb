@@ -1,0 +1,3 @@
+<% node['doozerd']['listen_address'].tap do |address| -%>
+-A FWR -p tcp -m tcp -d <%= address.split(':')[0] --dport <%= address.split(':')[1] %> -j ACCEPT
+<% end %>

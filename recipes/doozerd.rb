@@ -1,4 +1,3 @@
-# -*- mode: ruby -*-
 #
 # Cookbook Name:: doozer
 # Recipe:: doozerd
