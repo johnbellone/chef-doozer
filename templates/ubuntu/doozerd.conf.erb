@@ -1,7 +1,7 @@
 #!upstart
 # doozerd.conf
 author "John Bellone <john.bellone.jr@gmail.com>"
-description "Doozerd"
+description "doozerd"
 
 start on startup
 stop on shutdown
@@ -13,8 +13,8 @@ end script
 
 script
       export GOPATH=<%= File.join(@doozerd_path, 'bin') %>
-      echo $$ > /var/run/doozerd.pid
       exec sudo -u <%= @doozerd_user %> doozerd <%= @doozerd_options %> &> /var/log/doozerd.log
+      echo $$ > /var/run/doozerd.pid
 end script
 
 pre-stop script
