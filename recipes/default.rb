@@ -22,27 +22,42 @@
 
 include_recipe "doozer::doozerd"
 
-template "/etc/init/doozerd.conf" do
-  source "doozerd.conf.erb"
-  owner "root"
+options = {
+  :doozerd_user => node['doozerd']['user'],
+  :doozerd_path => node['doozerd']['install_prefix'],
+  :doozerd_options => node['doozerd']['run_options']
+}
+
+template "doozerd" do
+  case node[:platform]
+    when 'ubuntu'
+    path '/etc/init/doozerd.conf'
+    source 'doozerd.conf.erb'
+    mode 00644
+    when 'redhat', 'centos'
+    path '/etc/init.d/doozerd'
+    source 'doozerd.init.erb'
+    mode 00755
+  end
+
+  owner 'root'
   group node['doozerd']['root_group']
-  mode 00644
-  notifies :restart, "service[doozerd]"
-  variables({
-              :doozerd_user => node['doozerd']['user'],
-              :doozerd_path => node['doozerd']['install_prefix'],
-              :doozerd_options => node['doozerd']['run_options']
-            })
-  only_if { platform_family?("debian") }
+  notifies :restart, 'service[doozerd]'
+  variables options
 end
 
 service "doozerd" do
   case node[:platform]
-    when "ubuntu"
+    when 'ubuntu'
     provider Chef::Provider::Service::Upstart
-    when "redhat"
-    provider Chef::Provider::Service::Init::Redhat
+    action :enable
+    else
+    provider Chef::Provider::Service::Init
   end
+
   supports [:restart, :status, :start, :stop]
-  action :enable
+end
+
+service "doozerd" do
+  action :start
 end
