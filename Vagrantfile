@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
   config.vm.define :ubuntu1204 do |guest|
     guest.vm.box = 'opscode-ubuntu-12.04'
     guest.vm.box_url = 'https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box'
-    guest.vm.hostname = 'ubuntu-1204'
+    guest.vm.hostname = 'ubuntu-12.04'
     guest.vm.network :private_network, :ip => '172.0.1.1'
     guest.vm.network :forwarded_port, :guest => 8080, :host => 8080
   end
@@ -12,10 +12,18 @@ Vagrant.configure("2") do |config|
   config.vm.define :centos64 do |guest|
     guest.vm.box = 'opscode-centos-6.4'
     guest.vm.box_url = 'https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-6.4_provisionerless.box'
-    guest.vm.hostname = 'centos-64'
+    guest.vm.hostname = 'centos-6.4'
     guest.vm.network :private_network, :ip => '172.0.1.2'
     guest.vm.network :forwarded_port, :guest => 8080, :host => 8081
   end
+
+  config.vm.define :centos59 do |guest|
+    guest.vm.box = 'opscode-centos-5.9'
+    guest.vm.box_url = 'https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-5.9_provisionerless.box'
+    guest.vm.hostname = 'centos-5.9'
+    guest.vm.network :private_network, :ip => '172.0.1.3'
+    guest.vm.network :forwarded_port, :guest => 8080, :host => 8082
+  en
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", 256]
@@ -40,9 +48,11 @@ Vagrant.configure("2") do |config|
   # config.berkshelf.except = []
 
   config.vm.provision :chef_solo do |chef|
-    chef.add_recipe "doozer::doozer"
-    chef.add_recipe "doozer::default"
-    chef.add_recipe "doozer::iptables"
+    chef.add_recipe 'iptables'
+    chef.add_recipe 'golang'
+    chef.add_recipe 'doozer'
+    chef.add_recipe 'doozer::doozer'
+    chef.add_recipe 'doozer::iptables'
     chef.json = {
       'go' => {
         'platform' => 'amd64',
