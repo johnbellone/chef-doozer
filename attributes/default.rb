@@ -26,7 +26,7 @@ default[:doozerd][:user] = "root"
 default[:doozerd][:run_options] = {
   :timeout => 5,
   :listen_port => 8046,
-  :web_address => '127.0.0.1:8080',
+  :web_port => 8080,
   :name => 'local'
 }
 

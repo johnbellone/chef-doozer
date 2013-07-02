@@ -28,10 +28,10 @@ options = {
 
 options['doozerd_options'] = node[:doozerd][:run_options].map do |k,v|
   case k.to_sym
-    when :listen_address
-    "-l '#{v}'"
-    when :web_address
-    "-w '#{v}'"
+    when :listen_port
+    "-l '127.0.0.1:#{v}'"
+    when :web_port
+    "-w '127.0.0.1:#{v}'"
     when :boot_address
     "-b '#{v}'"
     when :name
