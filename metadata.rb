@@ -9,11 +9,12 @@ recipe                  "doozer", "Main Doozer configuration"
 recipe                  "doozer::doozer", "Doozer CLI"
 recipe                  "doozer::doozerd", "Doozer server"
 
-depends 'build-essential'
 depends 'golang'
+depends 'git'
+depends 'mercurial'
 
-supports 'redhat', '>= 6.0'
-supports 'centos', '>= 6.0'
+supports 'redhat', '>= 5.0'
+supports 'centos', '>= 5.0'
 supports 'ubuntu', '>= 6.10'
 
 suggests 'iptables'
