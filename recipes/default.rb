@@ -22,11 +22,11 @@
 include_recipe "doozer::doozerd"
 
 options = {
-  :doozerd_user => node['doozerd']['user'],
-  :doozerd_path => node['doozerd']['install_prefix']
+  :doozerd_user => node[:doozerd][:user],
+  :doozerd_path => node[:doozerd][:install_prefix]
 }
 
-options['doozerd_options'] = node['doozerd']['run_options'].map do |k,v|
+options['doozerd_options'] = node[:doozerd][:run_options].map do |k,v|
   case k.to_sym
     when :listen_address
     "-l '#{v}'"
@@ -45,7 +45,7 @@ options['doozerd_options'] = node['doozerd']['run_options'].map do |k,v|
     when :fill
     "-fill #{v}"
     when :attach_addresses
-    k.to_enum(:to_s).flat_map(&:prepend, "-a '").join('" ')
+    k.to_enum(:to_s).map {|a| "-a '#{a}'"}.join(' ')
   end
 end.join(' ')
 
@@ -61,8 +61,8 @@ template "doozerd" do
     mode 00755
   end
 
-  owner 'root'
-  group node['doozerd']['user_group']
+  owner node[:doozerd][:user]
+  group node[:doozerd][:user_group]
   notifies :restart, 'service[doozerd]'
   variables options
 end

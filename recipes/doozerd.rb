@@ -19,9 +19,9 @@
 # limitations under the License.
 #
 
-install_prefix = node['doozerd']['install_prefix']
-go = File.join(node['go']['install_dir'], 'go/bin/go')
-go_url = node['doozerd']['go_url']
+install_prefix = node[:doozerd][:install_prefix]
+go = File.join(node[:go][:install_dir], 'go/bin/go')
+go_url = node[:doozerd][:go_url]
 
 bash "install-doozerd" do
   code "#{go} get #{go_url}"
