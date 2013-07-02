@@ -1,56 +1,66 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
+# -*- coding: utf-8 -*-
 Vagrant.configure("2") do |config|
-  # Instruct to install Chef Client.
   config.omnibus.chef_version = :latest
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu-12.04-i386"
+  config.vm.define :ubuntu1204 do |guest|
+    guest.vm.box = 'opscode-ubuntu-12.04'
+    guest.vm.box_url = 'https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box'
+    guest.vm.hostname = 'ubuntu-12.04'
+    guest.vm.network :private_network, :ip => '172.0.1.1'
+    guest.vm.network :forwarded_port, :guest => 8080, :host => 8080
+  end
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
+  config.vm.define :centos64 do |guest|
+    guest.vm.box = 'opscode-centos-6.4'
+    guest.vm.box_url = 'https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-6.4_provisionerless.box'
+    guest.vm.hostname = 'centos-6.4'
+    guest.vm.network :private_network, :ip => '172.0.1.2'
+    guest.vm.network :forwarded_port, :guest => 8080, :host => 8081
+  end
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network :forwarded_port, guest: 8080, host: 8080
+  config.vm.define :centos59 do |guest|
+    guest.vm.box = 'opscode-centos-5.9'
+    guest.vm.box_url = 'https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-5.9_provisionerless.box'
+    guest.vm.hostname = 'centos-5.9'
+    guest.vm.network :private_network, :ip => '172.0.1.3'
+    guest.vm.network :forwarded_port, :guest => 8080, :host => 8082
+  end
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network :private_network, ip: "192.168.33.10"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
   config.vm.provider :virtualbox do |vb|
-     # Use VBoxManage to customize the VM. For example to change memory:
-     vb.customize ["modifyvm", :id, "--memory", "1024"]
-   end
+    vb.customize ["modifyvm", :id, "--memory", 512]
+    vb.customize ["modifyvm", :id, "--cpus", 4]
+    vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+  end
 
-  # Enable provisioning with chef solo, specifying a cookbooks path, roles
-  # path, and data_bags path (all relative to this Vagrantfile), and adding
-  # some recipes and/or roles.
-  #
+  config.ssh.max_tries = 40
+  config.ssh.timeout   = 120
+
+  # The path to the Berksfile to use with Vagrant Berkshelf
+  # config.berkshelf.berksfile_path = "./Berksfile"
+
+  # Enabling the Berkshelf plugin. To enable this globally, add this configuration
+  # option to your ~/.vagrant.d/Vagrantfile file
+  config.berkshelf.enabled = true
+
+  # An array of symbols representing groups of cookbook described in the Vagrantfile
+  # to exclusively install and copy to Vagrant's shelf.
+  # config.berkshelf.only = []
+
+  # An array of symbols representing groups of cookbook described in the Vagrantfile
+  # to skip installing and copying to Vagrant's shelf.
+  # config.berkshelf.except = []
+
   config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = "cookbooks"
-    chef.add_recipe "build-essential"
-    chef.add_recipe "golang"
-    chef.add_recipe "mercurial"
-    chef.add_recipe "git"
-    chef.add_recipe "doozer"
-    chef.add_recipe "doozer::doozerd"
-
+    chef.add_recipe 'iptables'
+    chef.add_recipe 'mercurial'
+    chef.add_recipe 'golang'
+    chef.add_recipe 'doozer'
+    chef.add_recipe 'doozer::doozer'
+    chef.add_recipe 'doozer::iptables'
     chef.json = {
       'go' => {
-        'platform' => '386',
+        'platform' => 'amd64',
         'version' => '1.1'
       }
     }

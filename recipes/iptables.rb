@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: doozer
-# Recipe:: doozerd
+# Recipe:: iptables
 #
 # Author:: John Bellone <john.bellone.jr@gmail.com>
 #
@@ -19,13 +19,4 @@
 # limitations under the License.
 #
 
-install_prefix = node[:doozerd][:install_prefix]
-go = File.join(node[:go][:install_dir], 'go/bin/go')
-go_url = node[:doozerd][:go_url]
-
-bash "install-doozerd" do
-  code "#{go} get #{go_url}"
-  environment 'GOPATH' => install_prefix
-  creates File.join(install_prefix, 'bin/doozerd')
-  not_if {::File.exists?(File.join(install_prefix, 'doozerd'))}
-end
+iptables_rule "doozerd.ports"

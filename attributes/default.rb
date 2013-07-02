@@ -1,4 +1,3 @@
-# -*- mode: ruby -*-
 #
 # Cookbook Name:: doozer
 # Attributes:: default
@@ -20,9 +19,16 @@
 # limitations under the License.
 #
 
-default['doozerd']['go_url'] = 'github.com/ha/doozerd'
+default[:doozerd][:go_url] = 'github.com/ha/doozerd'
+default[:doozerd][:install_prefix] = '/usr/local'
+default[:doozerd][:user_group] = "root"
+default[:doozerd][:user] = "root"
+default[:doozerd][:run_options] = {
+  :timeout => 5,
+  :listen_port => 8046,
+  :web_port => 8080,
+  :name => 'local'
+}
 
-default['doozer']['go_url'] = 'github.com/ha/doozer'
-
-default['doozerd']['install_prefix'] = '/usr/local'
-default['doozer']['install_prefix'] = '/usr/local'
+default[:doozer][:go_url] = 'github.com/ha/doozer'
+default[:doozer][:install_prefix] = '/usr/local'

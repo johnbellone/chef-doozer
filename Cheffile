@@ -1,9 +1,0 @@
-# -*- mode: ruby -*-
-# Cheffile
-site "http://community.opscode.com/api/v1"
-
-cookbook 'build-essential'
-cookbook 'golang'
-cookbook 'git'
-cookbook 'mercurial'
-cookbook 'doozer', :path => '.'
