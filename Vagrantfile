@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 Vagrant.configure("2") do |config|
   config.omnibus.chef_version = :latest
 
@@ -23,10 +24,13 @@ Vagrant.configure("2") do |config|
     guest.vm.hostname = 'centos-5.9'
     guest.vm.network :private_network, :ip => '172.0.1.3'
     guest.vm.network :forwarded_port, :guest => 8080, :host => 8082
-  en
+  end
 
   config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", 256]
+    vb.customize ["modifyvm", :id, "--memory", 512]
+    vb.customize ["modifyvm", :id, "--cpus", 4]
+    vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
   config.ssh.max_tries = 40
@@ -49,6 +53,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :chef_solo do |chef|
     chef.add_recipe 'iptables'
+    chef.add_recipe 'mercurial'
     chef.add_recipe 'golang'
     chef.add_recipe 'doozer'
     chef.add_recipe 'doozer::doozer'
