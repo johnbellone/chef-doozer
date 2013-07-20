@@ -1,32 +1,86 @@
-# <a name="title"></a>Doozer Chef Recipe
+Description
+===========
 
-## <a name="description"></a>Description
+Installs [doozerd][1], a highly available, consistent, distributed data
+store, and associated [client libraries][2].
 
-Manages [doozerd][1], a highly available, consistent, distrbuted data store, and
-associated client libraries.
+For more information about doozerd:
 
-## <a name="installation"></a> Installation
+* [https://github.com/ha/doozerd][1]
 
-[Librarian][2] is a cookbook dependency manager which will _take over_ your
-_entire_ cookbooks directory. It is used here to demonstrate, along with [Vagrant][3]
-and [VirtualBox][4], how you can use [Chef][5] to provision a virtual machine that
-consists of [Doozer][1] and its dependencies.
+For more information about the doozer client library:
 
-To install all of your *RubyGem* dependencies:
-        cd chef-doozer
-        bundle install
+* [https://github.com/ha/doozer][2]
 
-To install all of your *Chef cookbook* dependencies:
-        cd chef-doozer
-        bundle exec librarian-chef install
+About Doozer
+===========
 
-## <a name="repository"></a> Git repository
+In brief, Doozer is a highly available, consistent, distributed data store
+which is based on the [Google Chubby][3] white paper. When the data is changed
+the connected clients will be immediately notified without polling. Doozer is
+an excellent choice for a name service, database master election or
+configuration data shared among machines.
 
-The [git repository][5] is available. Please submit any pull requests with new
-functionality!
+The [Apache Zookeeper](http://zookeeper.apache.org/) is a similar software
+distribution which is found in both [Apache Solr](http://lucene.apache.org/solr/)
+and [Apache Hadoop](http://hadoop.apache.org/).
 
-[1]: https://github.com/ha/doozer "GitHub Doozer"
-[2]: https://github.com/applicationsonline/librarian-chef "GitHub Librarian"
-[3]: http://vagrantup.com "Vagrant"
-[4]: http://virtualbox.org "VirtualBox"
-[5]: https://github.com/johnbellone/chef-doozer "GitHub Chef Doozer"
+Requirements
+============
+
+## Platform:
+
+* Ubuntu
+* RHEL/CentOS
+
+Attributes
+==========
+
+See `attributes/default.rb` for defaults generated per platform.
+
+* `node[:doozerd][:go_url]` - GitHub address to the [Doozerd][1] project.
+* `node[:doozerd][:install_prefix]` - Full path to the default installation directory.
+* `node[:doozerd][:user_group]` - System group for the installation files.
+* `node[:doozerd][:user]` - User the daemon will run as.
+* `node[:doozerd][:run_options]` - Configuration options for the daemon.
+
+* `node[:doozer][:go_url]` - GitHub address to the [Doozer][2] project.
+* `node[:doozer][:install_prefix]` - Full path to the default installation directory.
+
+Recipes
+=======
+
+default
+-------
+
+The default recipe installs doozerd and starts the service using one of
+the templates available depending on the operating system. For the installation
+from source it uses the *doozerd* recipe (below).
+
+doozerd
+-------
+
+The doozerd recipe performs what is necessary to install daemon from source.
+The *golang* executable is required and thus the recipe to build it is required.
+
+doozer
+------
+
+The doozer recipe performs what is necessary to install the client from source.
+The *golang* executable is required and thus the recipe to build it is required.
+
+iptables
+--------
+
+This recipe sets up the iptables rules for firewalls. It requires the *iptables*
+recipe to do so.
+
+Usage
+=====
+
+To get doozerd installed on supported platforms use `recipe[doozer]`,
+which will install doozerd from source and start the daemon using
+the options specified.
+
+For the command-line library use `recipe[doozer::doozer]` to perform
+the build from source.
